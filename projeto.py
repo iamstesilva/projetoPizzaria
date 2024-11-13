@@ -2,7 +2,17 @@ import time
 import os
 os.system('cls')
 
-print('\033[1;32;40mBEM-VINDO A PIZZARIA!!\033[m')
+RESET = '\033[m'
+VERDE = '\033[1;32m'
+AZUL = '\033[1;34m'
+AMARELO = '\033[1;33m'
+VERMELHO = '\033[1;31m'
+CINZA = '\033[1;90m'
+BRANCO = '\033[1;97m'
+MAGENTA = '\033[1;35m'
+BRANCO_NEGRITO = '\033[1;97m'
+
+print(f"{VERDE}BEM-VINDO A PIZZARIA 2° DS!{RESET}\n".center(80))
 time.sleep(2)
 
 class Pizzaria:
@@ -17,9 +27,9 @@ class Pizzaria:
             "7": {"nome": "Carne Seca", "preco": 35.00}
         }
         self.menu_bebidas = {
-            "1": {"nome": "Refrigerante", "preco": 0.00},
-            "2": {"nome": "Suco Natural", "preco": 0.00},
-            "3": {"nome": "Refrigerante 2L", "preco": 0.00}
+            "1": {"nome": "Refrigerante", "preco": 7.00},
+            "2": {"nome": "Suco Natural", "preco": 6.50},
+            "3": {"nome": "Refrigerante 2L", "preco": 15.00}
         }
         self.menu_refrigerantes = {
             "1": {"nome": "Sprite", "preco": 7.00},
@@ -43,174 +53,195 @@ class Pizzaria:
         self.pedido = []
 
     def mostrar_menu(self, tipo):
-        if tipo == 'pizza':
-            print("\n\033[1;35;40m=== Menu de Pizzas ===\033[m")
-            for key, pizza in self.menu_pizzas.items():
-                print(f"{key}. {pizza['nome']} - R$ {pizza['preco']:.2f}")
-        elif tipo == 'bebida':
-            print("\n\033[1;35;40m=== Menu de Bebidas ===\033[m")
-            for key, bebida in self.menu_bebidas.items():
-                print(f"{key}. {bebida['nome']}")
-        print('')
+        print(f"{MAGENTA}{'=' * 30} Menu de {tipo.capitalize()}s {'=' * 30}{RESET}")
+        menu = self.menu_pizzas if tipo == 'pizza' else self.menu_bebidas
+        print(f"{MAGENTA}{'Código'.center(20)}{'Produto'.center(40)}{'Preço'.center(20)}{RESET}")
+        for key, item in menu.items():
+            print(f"{BRANCO_NEGRITO}{key.center(20)}{item['nome'].center(40)}{'R$ {:.2f}'.format(item['preco']).center(20)}{RESET}")
+        print(f"{MAGENTA}{'=' * 78}{RESET}")
 
     def mostrar_menu_refrigerantes(self):
-        print("\n\033[1;35;40m=== Menu de Refrigerantes ===\033[m")
+        print(f"\n{MAGENTA}{'=' * 30} Menu de Refrigerantes {'=' * 30}{RESET}")
+        print(f"{MAGENTA}{'Código'.center(20)}{'Produto'.center(40)}{'Preço'.center(20)}{RESET}")
         for key, refri in self.menu_refrigerantes.items():
-            print(f"{key}. {refri['nome']} - R$ {refri['preco']:.2f}")
-        print('')
+            print(f"{BRANCO_NEGRITO}{key.center(20)}{refri['nome'].center(40)}{'R$ {:.2f}'.format(refri['preco']).center(20)}{RESET}")
+        print(f"{MAGENTA}{'=' * 78}{RESET}")
 
     def mostrar_menu_sucos(self):
-        print("\n\033[1;35;40m=== Menu de Sucos Naturais ===\033[m")
+        print(f"\n{MAGENTA}{'=' * 30} Menu de Sucos Naturais {'=' * 25}{RESET}")
+        print(f"{MAGENTA}{'Código'.center(20)}{'Produto'.center(40)}{'Preço'.center(20)}{RESET}")
         for key, suco in self.menu_sucos.items():
-            print(f"{key}. {suco['nome']} - R$ {suco['preco']:.2f}")
-        print('')
+            print(f"{BRANCO_NEGRITO}{key.center(20)}{suco['nome'].center(40)}{'R$ {:.2f}'.format(suco['preco']).center(20)}{RESET}")
+        print(f"{MAGENTA}{'=' * 78}{RESET}")
 
     def mostrar_menu_refrigerantes_2l(self):
-        print("\n\033[1;35;40m=== Menu de Refrigerantes 2L ===\033[m")
+        print(f"\n{MAGENTA}{'=' * 30} Menu de Refrigerantes 2L {'=' * 22}{RESET}")
+        print(f"{MAGENTA}{'Código'.center(20)}{'Produto'.center(40)}{'Preço'.center(20)}{RESET}")
         for key, refri in self.menu_refrigerantes_2l.items():
-            print(f"{key}. {refri['nome']} - R$ {refri['preco']:.2f}")
-        print('')
+            print(f"{BRANCO_NEGRITO}{key.center(20)}{refri['nome'].center(40)}{'R$ {:.2f}'.format(refri['preco']).center(20)}{RESET}")
+        print(f"{MAGENTA}{'=' * 78}{RESET}")
 
-    def escolher_menu(self):
+    def escolher_item(self, menu):
         while True:
-            escolha_menu = input("\n\033[1;37;40mDeseja ver o menu de Pizzas (1) | Bebidas (2) | Seguir (3) | Sair (4)? (digite 1, 2, 3 ou 4): \033[m")
-            if escolha_menu == '1':
-                self.mostrar_menu('pizza')
-                return 'pizza'
-            elif escolha_menu == '2':
-                self.mostrar_menu('bebida')
-                return 'bebida'
-            elif escolha_menu == '3':
-                return 'seguir'
-            elif escolha_menu == '4':
-                print("\n\033[0;33;40mUm minuto...\033[m")
+            escolha = input(f"\n{BRANCO_NEGRITO}Digite o código do item desejado (ou 'sair' para voltar): {RESET}").strip()
+            print("\n")
+            if escolha in menu:
+                self.pedido.append(menu[escolha])
+                print(f"{AMARELO}Processando...{RESET}")
                 time.sleep(2)
-                print("\033[1;33;40mAtendimento Encerrado! Até Logo!\033[m")
-                exit()
+                print(f"{VERDE}Adicionado: {menu[escolha]['nome']}{RESET}\n")
+                time.sleep(2)
+                break
+            elif escolha.lower() == 'sair':
+                break
             else:
-                print("\033[1;31;40mEscolha inválida, por favor digite 1, 2, 3 ou 4.\033[m")
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
+
+    def escolher_bebida(self):
+        while True:
+            bebida = input(f"\n{MAGENTA}Escolha a opção desejada: {RESET}").strip()
+            if bebida == '1':
+                self.mostrar_menu_refrigerantes()
+                self.escolher_item(self.menu_refrigerantes)
+                break
+            elif bebida == '2':
+                self.mostrar_menu_sucos()
+                self.escolher_item(self.menu_sucos)
+                break
+            elif bebida == '3':
+                self.mostrar_menu_refrigerantes_2l()
+                self.escolher_item(self.menu_refrigerantes_2l)
+                break
+            else:
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
 
     def adicionar_pedido(self):
         while True:
-            tipo_menu = self.escolher_menu()
-            if tipo_menu == 'seguir':
-                break 
-
-            escolha = input("\033[1;37;40mEscolha um item (digite o número ou 'sair' para finalizar):\033[m ")
-            if escolha == 'sair':
+            escolha_menu = input(f"{BRANCO_NEGRITO}1. Ver menu de Pizzas.\n2. Ver menu de Bebidas.\n3. Prosseguir para o pagamento.\n4. Encerrar o Atendimento.\n\n{RESET}{MAGENTA}Digite a opção desejada: {RESET}").strip()
+            if escolha_menu == '1':
+                print(f"\n{AMARELO}Irei exibir o menu de pizzas para você!")
+                time.sleep(1)
+                print(f"{AMARELO}Um segundo...\n")
+                time.sleep(2)
+                self.mostrar_menu('pizza')
+                self.escolher_item(self.menu_pizzas)
+            elif escolha_menu == '2':
+                print(f"\n{AMARELO}Irei exibir o menu de bebidas para você!")
+                time.sleep(1)
+                print(f"{AMARELO}Um segundo...")
+                time.sleep(2)
+                self.mostrar_menu('bebida')
+                self.escolher_bebida()
+            elif escolha_menu == '3':
                 break
-            
-            if tipo_menu == 'pizza' and escolha in self.menu_pizzas:
-                self.pedido.append(self.menu_pizzas[escolha])
-                print(f"\033[1;32;40mAdicionada: {self.menu_pizzas[escolha]['nome']}\033[m")
-            elif tipo_menu == 'bebida':
-                if escolha == "1":  
-                    self.mostrar_menu_refrigerantes()
-                    refri_escolha = input("\033[1;37;40mEscolha um refrigerante (digite o número):\033[m ")
-                    if refri_escolha in self.menu_refrigerantes:
-                        self.pedido.append(self.menu_refrigerantes[refri_escolha])
-                        print(f"\033[1;32;40mAdicionada: {self.menu_refrigerantes[refri_escolha]['nome']}\033[m")
-                    else:
-                        print("\033[1;31;40mEscolha inválida.\033[m")
-                elif escolha == "2":  
-                    self.mostrar_menu_sucos()
-                    suco_escolha = input("\033[1;37;40mEscolha um suco (digite o número):\033[m ")
-                    if suco_escolha in self.menu_sucos:
-                        self.pedido.append(self.menu_sucos[suco_escolha])
-                        print(f"\033[1;32;40mAdicionada: {self.menu_sucos[suco_escolha]['nome']}\033[m")
-                    else:
-                        print("\033[1;31;40mEscolha inválida.\033[m")
-                elif escolha == "3": 
-                    self.mostrar_menu_refrigerantes_2l()
-                    refri2l_escolha = input("\033[1;37;40mEscolha um Refrigerante 2L (digite o número):\033[m ")
-                    if refri2l_escolha in self.menu_refrigerantes_2l:
-                        self.pedido.append(self.menu_refrigerantes_2l[refri2l_escolha])
-                        print(f"\033[1;32;40mAdicionada: {self.menu_refrigerantes_2l[refri2l_escolha]['nome']}\033[m")
-                    else:
-                        print("\033[1;31;40mEscolha inválida.\033[m")
-                else:
-                    print("\033[1;31;40mEscolha inválida, por favor digite um número válido.\033[m")
-                return
+            elif escolha_menu == '4':
+                print(f"\n{CINZA}Encerrando o atendimento...{RESET}")
+                time.sleep(2)
+                print(f"{VERDE}Atendimento encerrado. Até logo!{RESET}")
+                exit()
+            else:
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
 
     def mostrar_resumo_pedido(self):
-        print("\n\033[1;37;45m   === Resumo do Pedido ===   \033[m")
+        print(f"\n{MAGENTA}{'=' * 30} Resumo do Pedido {'=' * 30}{RESET}")
         total = 0
         for item in self.pedido:
-            print(f"{item['nome']} - R$ {item['preco']:.2f}")
+            print(f"{BRANCO_NEGRITO}{item['nome']} - R$ {item['preco']:.2f}{RESET}".center(80))
             total += item['preco']
-        print(f"\033[1;32;40mTotal: R$ {total:.2f}\033[m")
-        return total 
-    
-    def opcoes_pagamento(self):
-        total = self.mostrar_resumo_pedido() 
-        time.sleep(2)
-        print("\n\033[1;35;40m=== Opções de Pagamento ===\033[m")
-        print("1. Cartão de Crédito")
-        print("2. Cartão de Débito")
-        print("3. Dinheiro")
-        pagamento = input("\n\033[1;37;40mEscolha a forma de pagamento (1, 2, 3):\033[m ")
-        
-        if pagamento == "3":  
-            while True:
-                valor_recebido = float(input("\033[1;37;40mDigite o valor recebido: R$ \033[m"))
-                if valor_recebido < total:
-                    print("\033[1;31;40mValor recebido é menor que o total do pedido! Tente novamente.\033[m")
-                else:
-                    troco = valor_recebido - total
-                    print(f"\n\033[1;32;40mPagamento realizado com sucesso!\033[m")
-                    time.sleep(2)
-                    print(f"\033[1;33;40mTroco: R$ {troco:.2F}\033[m")
-                    break
-        elif pagamento in ["1", "2"]:
-            print("\n\033[1;32;40mPagamento realizado com sucesso!\033[m")
-        else:
-            print("\033[1;31;40mOpção de pagamento inválida.\033[m")
-        return
+        print(f"{AZUL}TOTAL: R$ {total:.2f}{RESET}".center(80))
+        print(f'{MAGENTA}={RESET}' * 78)
+        return total
 
     def confirmar_pedido(self):
-        self.mostrar_resumo_pedido()
-        confirmacao = input("\n\033[1;37;40mDeseja confirmar o pedido? (s/n):\033[m ")
-        if confirmacao.lower() == 's':
-            self.opcoes_pagamento()
-            time.sleep(2)
-            print("\033[1;35;40mObrigado pelo seu pedido!\033[m")
-        else:
-            print("\n\033[1;31;40mOpa! Quer retirar ou adicionar?\033[m")
-            self.opcoes_modificar_pedido()
-
-    def opcoes_modificar_pedido(self):
         while True:
-            acao = input("\033[1;37;40mDeseja retirar (r) ou adicionar (a) um item ao pedido? (digite 'r' ou 'a'): \033[m")
-            if acao.lower() == 'r':
+            total = self.mostrar_resumo_pedido()
+            confirmacao = input(f"\n{MAGENTA}(S) Sim.\n(N) Não.\n\nDeseja confirmar o seu pedido?  {RESET}").strip().lower()
+            if confirmacao == 's':
+                self.opcoes_pagamento()
+                break
+            elif confirmacao == 'n':
+                self.modificar_pedido()
+                break
+            else:
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
+
+    def modificar_pedido(self):
+        while True:
+            acao = input(f"{BRANCO}\nR = Retirar.\nA = Adicionar.\n\n{RESET}{MAGENTA}Digite a opção desejada: {RESET}").strip().lower()
+            if acao == 'r':
                 self.retirar_item()
+                self.confirmar_pedido()  
                 break
-            elif acao.lower() == 'a':
+            elif acao == 'a':
                 self.adicionar_pedido()
+                self.confirmar_pedido() 
                 break
             else:
-                print("\033[1;31;40mEscolha inválida. Digite 'r' para retirar ou 'a' para adicionar.\033[m")
-            if self.pedido:
-                self.confirmar_pedido()
-            else:
-                print("\033[1;31;40mNenhum item no pedido.\033[m")
-                break
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
 
     def retirar_item(self):
         if not self.pedido:
-            print("\033[1;31;40mNenhum item para retirar.\033[m")
+            print(f"{VERMELHO}Nenhum item para retirar.{RESET}")
             return
+        print(f"\n{MAGENTA}{'=' * 30} Pedidos Efetuados {'=' * 30}{RESET}")
+        for idx, item in enumerate(self.pedido, 1):
+            print(f"{idx}. {item['nome']} - R$ {item['preco']:.2f}".center(80))
+            print(f"{MAGENTA}{'=' * 78}{RESET}")
+        while True:
+            escolha = input(f"\n{BRANCO}Escolha o código do item para retirar: {RESET}").strip()
+            if escolha.isdigit() and 1 <= int(escolha) <= len(self.pedido):
+                item_removido = self.pedido.pop(int(escolha) - 1)
+                print(f"\n{AMARELO}Processando...{RESET}")
+                time.sleep(2)
+                print(f"{VERMELHO}Removido: {item_removido['nome']}{RESET}")
+                break
+            else:
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
 
-        print("\n\033[1;35;40m=== Itens no Pedido ===\033[m")
-        for idx, item in enumerate(self.pedido, start=1):
-            print(f"{idx}. {item['nome']} - R$ {item['preco']:.2f}")
+    def opcoes_pagamento(self):
+        total = self.mostrar_resumo_pedido()
+        print(f"\n{AZUL}{'=' * 28} Opções de Pagamento {'=' * 29}{RESET}".center(80))
+        while True:
+            pagamento = input((f"{BRANCO_NEGRITO}\n1. Débito\n2. Crédito\n3. Dinheiro\n\n{RESET}{AZUL}{'=' * 78}\n\nEscolha a opção de pagamento desejada: {RESET}").center(80)).strip()
+            if pagamento == '1':
+                print(f"\n{AMARELO}Pagamento via Débito sendo processado...{RESET}")
+                time.sleep(2)
+                print(f"{VERDE}Pagamento Efetuado!{RESET}")
+                time.sleep(1)
+                print(f"{MAGENTA}Obrigado pela preferência, seu pedido deve chegar em breve! Até Logo!")
+                print('\n')
+                break
+            elif pagamento == '2':
+                print(f"\n{AMARELO}Pagamento via Crédito sendo processado...{RESET}")
+                time.sleep(2)
+                print(f"{VERDE}Pagamento Efetuado!{RESET}")
+                time.sleep(1)
+                print(f"{MAGENTA}Obrigado pela preferência, seu pedido deve chegar em breve! Até Logo!")
+                print('\n')
+                break
+            elif pagamento == '3':
+                self.pagamento_dinheiro(total)
+                break
+            else:
+                print(f"{VERMELHO}Escolha inválida. Tente novamente.{RESET}")
 
-        escolha = input("\033[1;37;40mEscolha o número do item para retirar: \033[m")
-        if escolha.isdigit() and 1 <= int(escolha) <= len(self.pedido):
-            item_removido = self.pedido.pop(int(escolha) - 1)
-            print(f"\033[1;32;40mRemovido: {item_removido['nome']}\033[m")
-        else:
-            print("\033[1;31;40mEscolha inválida.\033[m")
-        self.confirmar_pedido()
+    def pagamento_dinheiro(self, total):
+        while True:
+            try:
+                dinheiro = float(input(f"{BRANCO}Digite o valor do dinheiro entregue: R$ {RESET}"))
+                if dinheiro >= total:
+                    troco = dinheiro - total
+                    print(f"\n{MAGENTA}Pagamento via Dinheiro sendo processado...{RESET}")
+                    time.sleep(2)
+                    print(f"{VERDE}Pagamento aceito! Troco: R$ {troco:.2f}{RESET}")
+                    time.sleep(2)
+                    print(f"{AMARELO}Obrigado pela preferência, seu pedido deve chegar em breve! Até Logo!")
+                    print('\n')
+                    break
+                else:
+                    print(f"{VERMELHO}Valor insuficiente! Tente novamente.{RESET}")
+            except ValueError:
+                print(f"{VERMELHO}Valor inválido! Digite um valor numérico.{RESET}")
 
 def main():
     pizzaria = Pizzaria()
@@ -218,7 +249,7 @@ def main():
     if pizzaria.pedido:
         pizzaria.confirmar_pedido()
     else:
-        print("Nenhum pedido foi realizado.")
+        print(f"{VERMELHO}Pedido vazio. Atendimento encerrado.{RESET}")
 
 if __name__ == "__main__":
     main()
